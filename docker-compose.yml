@@ -1,0 +1,11 @@
+version: '3'
+services:
+  denbackend:
+    image: imgbackend
+    ports:
+      - "3000:3000"  
+
+  denfrontend:
+    image: imgfrontend
+    ports:
+      - "80:80" 
