@@ -8,4 +8,18 @@ services:
   denfrontend:
     image: imgfrontend
     ports:
-      - "80:80" 
+      - "80:80"
+
+  dendb:
+    image: mysql
+    environment:
+      - "MYSQL_ROOT_PASSWORD=${sqlRootPass}"
+      - "MYSQL_DATABASE=${sqlDb}"
+      - "MYSQL_USER=${sqlUsr}"
+      - "MYSQL_PASSWORD=${sqlPass}"
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/1.sql:ro
+
+volumes:
+  db-data:
