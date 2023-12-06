@@ -13,10 +13,17 @@ services:
       - "3000:3000"
 
   denfrontend:
-    build:
-      context: ./frontend
-    ports:
-      - "80:80"
+    image: nginx:1.22
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    networks:
+      - proxy
+    labels:
+      - "traefik.http.routers.de_frontend.rule=Host(`s142733.devops-ap.be`)"
+      #- "traefik.http.routers.my-app.tls=true"
+      #- "traefik.http.routers.my-app.tls.certresolver=letsencrypt"  
+      - "traefik.docker.network=traefik"
+
 
   dendb:
     image: mysql
@@ -31,3 +38,8 @@ services:
 
 volumes:
   db-data:
+
+networks:
+  proxy:
+    external: true
+    name: traefik
