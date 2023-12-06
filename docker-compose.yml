@@ -4,13 +4,20 @@ services:
     build:
       context: ./backend
     environment:
-      - "STORAGE=mysql"
+      #- "STORAGE=mysql"
       - "MYSQL_HOST=dendb"
       - "MYSQL_USER=${sqlUsr}"
       - "MYSQL_PWD=${sqlPass}"
       - "MYSQL_DB=${sqlDb}"
-    ports:
-      - "3000:3000"
+    networks:
+      - proxy
+    labels:
+      - "traefik.http.routers.denbackend.rule=Host(`s142733.devops-ap.be`) && Path(`/api/{name:.*}`)"
+      #- "traefik.http.routers.my-app.tls=true"
+      #- "traefik.http.routers.my-app.tls.certresolver=letsencrypt"  
+      - "traefik.docker.network=traefik"
+
+    
 
   denfrontend:
     image: nginx:1.22
