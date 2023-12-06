@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS eentestdb;
+USE eentestdb;
 CREATE TABLE IF NOT EXISTS todos (
     id varchar(255) primary key,
     title varchar(255) not null,

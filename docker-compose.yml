@@ -4,13 +4,14 @@ services:
     build:
       context: ./backend
     environment:
-      #- "STORAGE=mysql"
+      - "STORAGE=mysql"
       - "MYSQL_HOST=dendb"
       - "MYSQL_USER=${sqlUsr}"
       - "MYSQL_PWD=${sqlPass}"
       - "MYSQL_DB=${sqlDb}"
     networks:
       - proxy
+      - backend_db
     labels:
       - "traefik.http.routers.denbackend.rule=Host(`s142733.devops-ap.be`) && Path(`/api/{name:.*}`)"
       #- "traefik.http.routers.my-app.tls=true"
@@ -42,6 +43,9 @@ services:
     volumes:
       - db-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/1.sql:ro
+    networks:
+      - backend_db
+
 
 volumes:
   db-data:
@@ -50,3 +54,5 @@ networks:
   proxy:
     external: true
     name: traefik
+  backend_db:
+
