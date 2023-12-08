@@ -14,8 +14,8 @@ services:
       - backend_db
     labels:
       - "traefik.http.routers.denbackend.rule=Host(`s142733.devops-ap.be`) && Path(`/api/{name:.*}`)"
-      #- "traefik.http.routers.my-app.tls=true"
-      #- "traefik.http.routers.my-app.tls.certresolver=letsencrypt"  
+      - "traefik.http.routers.denbackend.tls=true"
+      - "traefik.http.routers.denbackend.tls.certresolver=letsencrypt"  
       - "traefik.docker.network=traefik"
 
     
@@ -28,8 +28,8 @@ services:
       - proxy
     labels:
       - "traefik.http.routers.de_frontend.rule=Host(`s142733.devops-ap.be`)"
-      #- "traefik.http.routers.my-app.tls=true"
-      #- "traefik.http.routers.my-app.tls.certresolver=letsencrypt"  
+      - "traefik.http.routers.de_frontend.tls=true"
+      - "traefik.http.routers.de_frontend.tls.certresolver=letsencrypt"  
       - "traefik.docker.network=traefik"
 
 
