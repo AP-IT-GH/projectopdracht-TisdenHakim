@@ -1,42 +1,69 @@
-# Projectopdracht
+# Simpele TODO lijst web app
+Deze repo bevat een simpele TODO web app, met een frontend, backend en db.
 
-Welkom bij het de repository voor de doorlopende opdracht van DevOps. 
+# Demo
+![](https://github.com/AP-IT-GH/projectopdracht-TisdenHakim/blob/main/demo.gif)
 
-## Situatie
+### Wat uitleg:
+Deze TODO-applicatie is opgezet met een docker compose file en bestaat uit drie services: `denbackend`, `denfrontend`, en `dendb`. 
+Hier beneden vind je een overzicht van de configuratie en hoe je deze applicatie kunt gebruiken.
 
-Je werkt voor ACME. Ze hebben onlangs een todo-applicatie ontwikkeld. 
-Je wordt gevraagd om een DevOps pipeline uit te werken. Hiervoor zal je op een remote Linux machine werken.
+### Services:
+**Let op:**
+Het is de bedoeling om de URL's in het Docker Compose-bestand aan te passen naar een domein van jezelf.
 
-Er zijn twee onderdelen: Back-end en Front-end. Er is geen authenticatie.
+1. **denbackend**:
+   - Bevat de backend van de TODO-applicatie.
+   - Draait op `h4kim.tech/api/{name:.*}`.    Je past alles voor `/api/{name:.*}` aan.
+   - Geconfigureerd voor TLS met Let's Encrypt via Traefik.
 
-De back-end is een NodeJs applicatie die de API host. De back-end luistert op poort 3000. 
-De back-end draait standaard in-memory. Met andere woorden, de taken worden enkel opgeslagen in geheugen, niet op disk. 
-De back-end kan ook een connectie maken naar een mysql databank. Die stel je in met volgende environment variabelen:
+2. **denfrontend**:
+   - Bevat de frontend van de applicatie, gebaseerd op een Nginx-image.
+   - Toegankelijk via `h4kim.tech`.     Zie 'let op' hierboven! 
 
-* STORAGE=mysql
-* MYSQL_HOST=<hostname>
-* MYSQL_USER=<username>
-* MYSQL_PWD=$mysqlpwd 
-* MYSQL_DB=$mysqldb
+3. **dendb**:
+   - MySQL als db van de applicatie.
+   - Gebruikt volumes om gegevens op te slaan en initialiseert de database met `init.sql`.
 
-De Front-end is een HTML5 statische applicatie en luistert op poort 80. 
-Via AJAX calls wordt de API aangeroepen. De front-end en de API moeten op dezelfde host draaien. 
-De API draait in een subfolder /api.
+### Configuratie:
 
-## Architectuur
+- De applicatie maakt gebruik van Traefik als reverse proxy om verkeer naar de juiste services te routeren.
+- Het is dus de bedoeling dat Traefik reeds draaiende is op je machine. 
+- Een extern Traefik-netwerk wordt gebruikt om TLS-certificaten te beheren en verkeer veilig te maken via HTTPS.
 
-![Architectuur](./architectuur.png)
+### Hoe te gebruiken:
+**Let op 1:**
+Ik ga ervan uit dat Traefik al geïnitialiseerd is op je machine voordat je deze Docker Compose-applicatie start. 
+Zorg er dus voor dat Traefik correct is geconfigureerd en dat het operationeel is, aangezien deze applicatie gebruikmaakt van Traefik als reverse proxy.
 
-## Opdracht:
+**Let op 2:**
+Voordat je de Docker Compose-applicatie start, dien je een `.env`-bestand aan te maken in de directory waar de docker compose zich bevind. 
+Deze met de volgende variabelen en hun waarden:
 
-1. Connecteer naar je Debian Linux omgeving
-1. Clone deze repository
-1. Bouw een container voor de back-end. De back-end draait op NodeJS. Kies zelf een tag.
-1. Bouw een container voor de front-end. De front-end draait op Nginx. Je maakt gebruik van nginx. Je kan gebruik maken van de standaard configuratie.
-1. Maak een docker compose file aan die deze containers refereert. Expose je front-end op poort 80.
-1. Voeg Mysql toe aan je netwerk dmv een docker container. Je maakt gebruik van een mysql image. Voeg disk mappings toe zodat de state van je mysql container bewaard blijft.
-1. De repository bevat een bestand init.sql. Zorg dat dit wordt uitgevoerd bij de start van de Mysql container. 
-1. Configureer de API zodat die deze MySql databank gebruikt.
-1. Installeer Traefik als Reverse proxy op je omgeving.
-1. Configureer ssl certificaat aanvraag via LetsEncrypt
-1. Expose de todo applicatie op ```https://<studentnr>.devops-ap.be```
+- `sqlUsr`: De gebruikersnaam voor de MySQL-database.
+- `sqlPass`: Het wachtwoord voor de MySQL-gebruiker.
+- `sqlRootPass`: Het wachtwoord voor de root-gebruiker van de MySQL-database.
+- `sqlDb`: De naam van de MySQL-database.
+
+
+1. Zorg ervoor dat Docker en Docker Compose zijn geïnstalleerd op je machine.
+2. Voer het volgende commando uit in de directory waar het `docker-compose.yml`-bestand zich bevindt:
+    ```bash
+    docker-compose up -d
+    ```
+   Dit zal alle bovenstaande genoemde services starten in detached mode (achtergrond).
+3. De applicatie is nu bereikbaar op (In mijn geval: `h4kim.tech`) voor de frontend en (In mijn geval:`h4kim.tech/api/{name:.*}`) voor de backend.
+4. De backend API kan bereikt worden door middel van: `jedomein/api/todo` <== (API) `jedomein/api/verify` <== (Status API)
+
+### Redenen waarom de app niet zou kunnen werken:
+
+- De environment variabelen zijn niet correct geconfigureerd voordat je de applicatie start.
+- Traefik is verkeerd geconfigureerd en/of is niet operationeel.
+
+### Het stoppen van de applicatie:
+
+- Om de applicatie te stoppen, gebruik je:
+    ```bash
+    docker-compose down
+    ```
+
