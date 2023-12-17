@@ -49,7 +49,7 @@ Deze met de volgende variabelen en hun waarden:
 1. Zorg ervoor dat Docker en Docker Compose zijn geïnstalleerd op je machine.
 2. Voer het volgende commando uit in de directory waar het `docker-compose.yml`-bestand zich bevindt:
     ```bash
-    docker-compose up -d
+    docker compose up -d
     ```
    Dit zal alle bovenstaande genoemde services starten in detached mode (achtergrond).
 3. De applicatie is nu bereikbaar op (In mijn geval: `h4kim.tech`) voor de frontend en (In mijn geval:`h4kim.tech/api/{name:.*}`) voor de backend.
@@ -64,6 +64,6 @@ Deze met de volgende variabelen en hun waarden:
 
 - Om de applicatie te stoppen, gebruik je:
     ```bash
-    docker-compose down
+    docker compose down
     ```
 
